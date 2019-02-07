@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ejemplo de Uso de RestFul</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   <!-- Compiled and minified CSS -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+   <script
+   src="https://code.jquery.com/jquery-3.3.1.min.js"
+   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+   crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+   <script src="funciones.js"></script>
+</head>
+<body>
+
+        <div class="container">
+
+            <div class="card text-left">
+             
+              <div class="card-body">
+                <h4 class="card-title">Ejemplo de Uso de un RestFul</h4>
+                <p class="card-text">Este ejemplo obtiene las provincias, cantones y distritos de Costa Rica y los muestra en Select anidados</p>
+              </div>
+              
+            </div>
+            <br><br>
+                <div class="form-group">
+                    <label for="provincia">Provincias</label>
+                    <select class="form-control" id="provincia">
+                
+                    </select>
+                </div>
+                
+                
+                <div class="form-group">
+                    <label for="canton">Cantones</label>
+                    <select class="form-control" id="canton">
+                
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="distrito">Distritos</label>
+                    <select class="form-control" id="distrito">
+                
+                    </select>
+                </div>
+           </div>
+    
+    <script>
+       $(document).ready(function(){
+        
+        var provincias;
+    var cantones;
+    obtenerProvincias();
+
+    $('#provincia').on('change', function() {
+        provincias=this.value;
+       obtenerCatones(this.value);
+      });
+
+      $('#canton').on('change', function() {
+        cantones=this.value;
+        obtenerDistritos(provincias,cantones);
+       });
+   
+       
+        });
+
+        function obtenerProvincias(){
+
+   
+$.ajax({
+    dataType: "json",
+    url: "https://ubicaciones.paginasweb.cr/provincias.json",
+    data: {},
+    success: function (data) {
+        var html = "<select>";
+        for(key in data) {
+            html += "<option value='"+key+"'>"+data[key]+"</option>";
+        }
+        html += "</select";
+        $('#provincia').html(html);
+    }
+});
+
+}
+
+function obtenerCatones(idprovincia){
+
+$.ajax({
+dataType: "json",
+url: "https://ubicaciones.paginasweb.cr/provincia/"+idprovincia+"/cantones.json",
+data: {},
+success: function (data) {
+    var html = "<select>";
+    for(key in data) {
+        html += "<option value='"+key+"'>"+data[key]+"</option>";
+    }
+    html += "</select";
+    $('#canton').html(html);
+}
+});
+}
+
+function obtenerDistritos(idprovincia,idcanton){
+
+$.ajax({
+    dataType: "json",
+    url: "https://ubicaciones.paginasweb.cr/provincia/"+idprovincia+"/canton/"+ idcanton +"/distritos.json",
+    data: {},
+    success: function (data) {
+        var html = "<select>";
+        for(key in data) {
+            html += "<option value='"+key+"'>"+data[key]+"</option>";
+        }
+        html += "</select";
+        $('#distrito').html(html);
+    }
+});
+
+
+
+}
+
+        
+            
+    </script>
+</body>
+</html>
